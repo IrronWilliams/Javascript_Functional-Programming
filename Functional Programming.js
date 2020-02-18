@@ -78,7 +78,7 @@ let tea4BlackTeamFCC = getTea2(prepareBlackTea, 3)
 console.log(tea4GreenTeamFCC, tea4BlackTeamFCC)
 
 /*
-Using object-oriented code to model browsing the web in your browser and tracking the tabs you have opened. 
+Using object-oriented code to model browsing the web in your browser and tracking the tabs user has opened. 
 
 A Window object is made up of tabs, and you usually have more than one Window open. The titles of each open site in each Window object is 
 held in an array. After working in the browser (opening new tabs, merging windows, and closing tabs), you want to print the tabs that are 
@@ -86,6 +86,9 @@ still open. Closed tabs are removed from the array and new tabs (for simplicity)
 
 The code editor shows an implementation of this functionality with functions for tabOpen(), tabClose(), and join(). The array tabs is 
 part of the Window object that stores the name of the open pages.
+
+This is an example of how mutation can cause unexpected results. If the splice method was used in the tabClose() function, 
+splice will change the original array it is called on, and the second call to it will use a modified array, and gave unexpected results.
 */
 
 // tabs is an array of titles of each site open within the window
@@ -130,3 +133,45 @@ var Window = function(tabs) {
                       .join(workWindow.tabClose(1).tabOpen())
   console.log(finalTabs.tabs)
   //finalTabs.tabs should be ['FB', 'Gitter', 'Reddit', 'Twitter', 'Medium', 'new tab', 'Netflix', 'YouTube', 'Vine', 'GMail', 'Work mail', 'Docs', 'freeCodeCamp', 'new tab']
+
+/*
+In functional programming, changing or altering things is called mutation, and the outcome is called a side effect. A function, ideally, 
+should be a pure function, meaning that it does not cause any side effects.
+
+Its easy to mistakenly alter a variable or object. Example below shows how to alter a variable/object.  
+*/ 
+
+//function incrementer returns the value of the global variable fixedValue increased by one.
+let fixedValue = 4
+function incrementer () {
+  //return fixedValue ++ //using the ++ operator will mutate fixedValue; meaning it will no longer reference original value assigned
+  return fixedValue +1
+}
+let newValue = incrementer() // Should equal 5
+console.log(fixedValue) // Should print 4
+console.log(newValue)
+
+/*
+Another principle of functional programming is to always declare your dependencies explicitly. This means if a function depends on a 
+variable or object being present, then pass that variable or object directly into the function as an argument.
+
+There are several good consequences from this principle. The function is easier to test, you know exactly what input it takes, and it 
+won't depend on anything else in your program.
+
+This can give you more confidence when you alter, remove, or add new code. You would know what you can or cannot change and you can 
+see where the potential traps are.
+
+Finally, the function would always produce the same output for the same set of inputs, no matter what part of the code executes it. 
+
+Code will provide the same result as function incrementer ().  This time passing the fixedValue2 into the function as a parameter.
+In previous example, function incrementer () was dependent on variable fixedValue.  However, the variable was not passed directly to
+function.
+ */
+
+let fixedValue2 = 7
+function incrementer (value) {
+  return value +1
+}
+var newValue2 = incrementer(fixedValue2)
+console.log(fixedValue2); 
+console.log(newValue2)
